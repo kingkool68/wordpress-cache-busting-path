@@ -7,12 +7,6 @@ Author: kingkool68
 Author URI: http://www.russellheimlich.com/blog
 License: GPL2
 */
-function cache_busting_path($path, $time_format = 'U') {
-	if( $path[0] != '/' ) { // Checks for the first character in $path is a slash and adds it if it isn't.
-		$path = '/' . $path;
-	}
-	return get_bloginfo('template_url') . $path . '?' . date($time_format, filemtime( get_theme_root() . '/' . get_template() . $path ) );
-}
 
 /*
 Rewrites CSS and JavaScript urls that are enqueued via the proper WordPress functions. It adds a date of when the file was last modified before the file name for cacheing efficeny.
@@ -24,7 +18,7 @@ Requires the following in the .htaccess file:
 	RewriteRule ^(.+)\.([0-9|\-|:_])+\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js|json)$ $1.$3 [L]
 </IfModule>
 */
-function cache_busting_file_src( $src, $handle = '' ) {
+function cache_busting_file_src( $src ) {
 	global $wp_scripts;
 	// If $wp_scripts hasn't been initialized
 	if( ( $wp_scripts instanceof WP_Scripts ) === false ) {
@@ -57,5 +51,5 @@ function cache_busting_file_src( $src, $handle = '' ) {
 
 	return $src;
 }
-add_filter( 'script_loader_src', 'cache_busting_file_src', 10, 2 );
-add_filter( 'style_loader_src', 'cache_busting_file_src', 10, 2 );
+add_filter( 'script_loader_src', 'cache_busting_file_src', 10 );
+add_filter( 'style_loader_src', 'cache_busting_file_src', 10 );
