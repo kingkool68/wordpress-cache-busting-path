@@ -21,10 +21,10 @@ Requires the following in the .htaccess file:
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^(.+)\.([0-9|\-|:_])+\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js)$ $1.$3 [L]
+	RewriteRule ^(.+)\.([0-9|\-|:_])+\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js|json)$ $1.$3 [L]
 </IfModule>
 */
-function cache_busting_file_src( $src, $handle ) {
+function cache_busting_file_src( $src, $handle = '' ) {
 	global $wp_scripts;
 	// If $wp_scripts hasn't been initialized
 	if( ( $wp_scripts instanceof WP_Scripts ) === false ) {
@@ -45,16 +45,15 @@ function cache_busting_file_src( $src, $handle ) {
 
 	// If the folder starts with wp- then we can figure out where it lives on the filesystem.
 	if( strstr( $path, '/wp-' ) ) {
-		$file = untrailingslashit(ABSPATH) . $path;
+		$file = untrailingslashit( ABSPATH ) . $path;
 	}
 
 	if( !file_exists( $file ) ) {
 		return $src;
 	}
 
-	$time = 0; //Just in case something goes wrong...
 	$time = date( 'Y-m-d_g:i', filemtime( $file ) );
-	$src = preg_replace( '/\.(css|js)$/i', ".$time.$1", $src );
+	$src = preg_replace( '/\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js|json)$/i', ".$time.$1", $src );
 
 	return $src;
 }
