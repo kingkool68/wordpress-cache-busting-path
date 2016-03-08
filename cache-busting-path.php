@@ -46,7 +46,11 @@ function cache_busting_file_src( $src ) {
 		return $src;
 	}
 
-	$time = date( 'Y-m-d_g:i', filemtime( $file ) );
+	$modified_time = filemtime( $file );
+	$timezone_string = get_option( 'timezone_string' );
+	$dt = new DateTime( '@' . $modified_time );
+	$dt->setTimeZone( new DateTimeZone( $timezone_string ) );
+	$time = $dt->format( 'Y-m-d_g:i' );
 	$src = preg_replace( '/\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js|json)$/i', ".$time.$1", $src );
 
 	return $src;
