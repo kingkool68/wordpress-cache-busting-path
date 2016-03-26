@@ -15,7 +15,7 @@ Requires the following in the .htaccess file:
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^(.+)\.([0-9|\-|:_])+\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js|json)$ $1.$3 [L]
+	RewriteRule ^(.+)\/([0-9|\-|:_])+--(.+)\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js)$ $1/$3.$4 [L]
 </IfModule>
 */
 function cache_busting_file_src( $src ) {
@@ -52,7 +52,9 @@ function cache_busting_file_src( $src ) {
 	$dt = new DateTime( '@' . $modified_time );
 	$dt->setTimeZone( new DateTimeZone( $timezone_string ) );
 	$time = $dt->format( $time_format );
-	$src = preg_replace( '/\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js|json)$/i', ".$time.$1", $src );
+	$parts = pathinfo( $src );
+	$old_filename = $parts['filename'] . '.' . $parts['extension'];
+	$src = str_replace( $old_filename, $time . '--' . $old_filename, $src );
 
 	return $src;
 }
