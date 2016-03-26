@@ -46,7 +46,7 @@ function cache_busting_file_src( $src ) {
 		return $src;
 	}
 
-	$time_format = apply_filters( 'cache_busting_path_time_format', 'Y-m-d_g:i' );
+	$time_format = apply_filters( 'cache_busting_path_time_format', 'Y-m-d_g-i' );
 	$modified_time = filemtime( $file );
 	$timezone_string = get_option( 'timezone_string' );
 	$dt = new DateTime( '@' . $modified_time );
