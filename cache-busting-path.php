@@ -18,13 +18,13 @@ Requires the following in the .htaccess file:
 	RewriteRule ^(.+)\/([0-9|\-|:_])+--(.+)\.(bmp|css|cur|gif|ico|jpe?g|js|png|svgz?|webp|webmanifest|js)$ $1/$3.$4 [L]
 </IfModule>
 */
-function cache_busting_file_src( $src ) {
+function cache_busting_file_src( $src = '' ) {
 	global $wp_scripts;
 	// If $wp_scripts hasn't been initialized
 	if( ( $wp_scripts instanceof WP_Scripts ) === false ) {
 		$wp_scripts = new WP_Scripts();
 	}
-	$base_url = $wp_scripts->base_url;
+	$base_url = apply_filters( 'cache_busting_path_base_url', $wp_scripts->base_url, $src );
 
 	// Check if script lives on this domain. Can't rewrite external scripts, they won't work.
 	if( !strstr( $src, $base_url ) ) {
