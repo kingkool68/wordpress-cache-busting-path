@@ -2,7 +2,7 @@
 /*
 Plugin Name: Cache Busting Path
 Description: Function that returns a path with a cache-busting query string based on the last time the file was updated.
-Version: 1.1
+Version: 1.2
 Author: kingkool68
 Author URI: http://www.russellheimlich.com/blog
 License: GPL2
@@ -20,9 +20,9 @@ Requires the following in the .htaccess file:
 */
 function cache_busting_file_src( $src = '' ) {
 	global $wp_scripts;
-	// If $wp_scripts hasn't been initialized
+	// If $wp_scripts hasn't been initialized then bail
 	if( ( $wp_scripts instanceof WP_Scripts ) === false ) {
-		$wp_scripts = new WP_Scripts();
+		return;
 	}
 	$base_url = apply_filters( 'cache_busting_path_base_url', $wp_scripts->base_url, $src );
 
